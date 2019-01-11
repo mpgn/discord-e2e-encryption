@@ -1,6 +1,6 @@
 # Discord End-to-End encryption 
 
-This tampermonkey/greasemonkey script allows you to encrypt data client to client before sending them to a discord channel using the webui version of discord https://discordapp.com. This way, discord only see encrypted data and cannot decrypt them without the secret key. Of course, users should also have this script and the secret key to decrypt the data. The script is intended to be used with tampermonkey or greasemonkey addon.
+Script developed to encrypt your messages on the client side before sending them to a discord channel. This way, discord only see encrypted data and cannot decrypt them without the secret key. Of course, users should also have this script and the secret key to decrypt the data. The script is intended to be used with tampermonkey or greasemonkey addon on Discord for browser.
 
 ![ecnrypt-discord6](https://user-images.githubusercontent.com/5891788/51050102-fc7d6280-15cf-11e9-8346-24e8c81ed743.gif)
 
@@ -14,11 +14,11 @@ This script play with the DOM of the document, checking on modifying element on 
 2. Add the `discord-e2e.js` to tampermonkey
 2. Once the script is installed you should be able to decrypt the data
 
-### Send encrypted text 
+### Send encrypted messages
 
 1. Type some text
 2. Press ENTER, you should see that now the text is encoded in base64
-3. Press SPACE on the keyboard then ENTER
+3. Press SPACE then ENTER on the keyboard
 4. Done
 
 ### Add the tampermonkey script
@@ -27,7 +27,7 @@ This script play with the DOM of the document, checking on modifying element on 
 2. Open the Dashboard addon
 3. Click on the button "+" or "Add script"
 4. Copy past the content of the file `discord-e2e.js`
-5. Go to discord and test the demo !
+5. Go to discord and test the demo ! 
 
 ### How data are encrypted ?
 
@@ -35,7 +35,7 @@ The data are encrypted with the librairy [CryptoKey](https://developer.mozilla.o
 
 Only people with the same key can decrypt the data.
 
-### Can I set several key for multiple channel ?
+### Can I set several keys for multiple channel ?
 
 Yes, you can set as many keys you want.  A key is linked to channel like this 
 ```javascript
@@ -85,6 +85,7 @@ var keyStorage = [
 ]
 ```
 6. Add the channel path
+7. Share **securely** the key with others
 
 **Note**: you can set different key for different channel. If a key is lost, the data cannot be retrieve.
 
