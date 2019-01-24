@@ -8,10 +8,12 @@ This script play with the DOM of the document, checking on modifying element on 
 
 **The script is pure Javascript, no external librairies are loaded**
 
+**Tested on Firefox with Greasmonkey and Chrome with Tampermonkey** 
+
 ### Demo
 
-1. You can join this Discord and follow the inscruction to add the keys into tampermonkey https://discord.gg/vAuKR6E
-2. Add the `discord-e2e.js` to tampermonkey
+1. You can join this Discord and follow the inscruction to add the keys into tampermonkey https://discord.gg/g9teQ2N
+2. Add the `discord-e2e.js` to tampermonkey or greasemonkey
 2. Once the script is installed you should be able to decrypt the data
 
 ### Send encrypted messages
@@ -101,6 +103,6 @@ This is only for Discord on browser https://discordapp.com with Chrome for Firef
 
 ### Improvement
 
-- encrypt attachement
-- better key management
-- check if DOM changed
+- Encrypt attachement
+- Better key management (any idea)
+- Check if DOM changed before anything else
