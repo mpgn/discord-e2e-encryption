@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         discord-e2e
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.1
 // @description  Discord End2End encryption
 // @author       @mpgn_x64 https://github.com/mpgn
 // @match        https://discordapp.com/channels/*
@@ -100,7 +100,6 @@ function b64DecodeUnicode(str) {
 }
 
 function userSend(e){
-    console.log("ete")
     e = e || window.event;
     var keyCode = e.which || e.keyCode;
     var charStr = String.fromCharCode(keyCode);
@@ -119,7 +118,6 @@ function userSend(e){
                 console.log("[+] Press SPACE and ENTER on the keyboard")
                 document.querySelector('textarea').value = _arrayBufferToBase64(result)
                 encrypted = 1
-                console.log("encrypted")
             })
         } else if (encrypted && spaced) {
             console.log("[+] Message send")
@@ -215,12 +213,16 @@ var text = '';
 var encrypted = 0;
 var spaced = 0;
 var send = 0;
-var observer = new MutationObserver(checkUserScroll);
+var observerScroll = new MutationObserver(checkUserScroll);
 function addObserverIfDesiredNodeAvailable() {
-    //var composeBox = document.getElementsByClassName("messages-3amgkR")[0];
+    // var composeBox = document.getElementsByClassName("messages-3amgkR")[0];
     var composeBox = document.getElementsByClassName("messagesWrapper-3lZDfY")[0];
-    var config = {childList: true, subtree: true};
-    observer.observe(composeBox,config);
+    var config = {attributes: true,
+  childList: true,
+  subtree: true,
+  characterData: true};
+    console.log("event fire")
+    observerScroll.observe(composeBox,config);
 }
 
 // check if user switch channel
@@ -259,19 +261,17 @@ function checkMessagesLoaded(changes, observer) {
         observer.disconnect();
         console.log("Messages loaded")
         addObserverIfDesiredNodeAvailable();
+
     }
 }
 
 function checkUserScroll(changes, observer) {
-    console.log(event, observer)
-    if (typeof event == "undefined" || event.type == "scroll") {
-        console.log("scroll")
+    // console.log("event ", changes, observer)
+		if (typeof event == "undefined" || event.type == "scroll") {
+        // console.log("scroll")
         // dirty but working
-        setTimeout(function() { decryptMessages(); }, 2000);
+        setTimeout(function() { decryptMessages(); }, 1500);
     } else if(event.type === "message" || event.type === "readystatechange") {
         decryptLastMessages(document.getElementsByClassName("markup-2BOw-j").length)
     }
 }
-
-function noenter() {
-  return !(window.event && window.event.keyCode == 13); }
