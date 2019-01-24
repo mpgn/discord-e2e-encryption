@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         discord-e2e
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  Discord End2End encryption
 // @author       @mpgn_x64 https://github.com/mpgn
 // @match        https://discordapp.com/channels/*
@@ -142,18 +142,22 @@ function userSend(e){
 // decrypt all data visible by the user on Discord chat
 function decryptMessages() {
     console.log("[+] Message decrypted... ")
+  	let compact = 0
+    if (document.querySelector('.containerCompactBounded-cYR5cW') !== null) {
+      compact = 1
+    }
     var messages = document.getElementsByClassName("markup-2BOw-j")
     //console.log(document.getElementsByClassName("markup-2BOw-j").length)
     for (let i = 0; i < messages.length; i++) {
         // console.log(i, messages[i])
-        if (messages[i].childNodes.length > 1) {
+        if (messages[i].childNodes.length > compact) {
             //console.log(b64DecodeUnicode(messages[i].childNodes[1].textContent))
             try {
-                var data = _base64ToArrayBuffer(messages[i].childNodes[1].textContent)
+                var data = _base64ToArrayBuffer(messages[i].childNodes[compact].textContent)
                 // console.log(data)
                 decrypt(data, key, iv).then(function(result) {
                     var enc = new TextDecoder("utf-8");
-                    messages[i].childNodes[1].textContent = enc.decode(result)
+                    messages[i].childNodes[compact].textContent = enc.decode(result)
                     // console.log("decrypt" + enc.decode(result))
                 })
             } catch(e) { }
@@ -164,14 +168,18 @@ function decryptMessages() {
 // Decrypt last message send by user or last message receive
 function decryptLastMessages(last) {
     console.log("[+] Last Message decrypted... ")
+  	let compact = 0
+    if (document.querySelector('.containerCompactBounded-cYR5cW') !== null) {
+      compact = 1
+    }
     var message = document.getElementsByClassName("markup-2BOw-j")[last-1]
     var enc = new TextDecoder("utf-8");
-    console.log(message.childNodes[1].textContent)
-    if (message.childNodes.length > 1) {
-        console.log(_base64ToArrayBuffer(message.childNodes[1].textContent))
-        var data = _base64ToArrayBuffer(message.childNodes[1].textContent)
+    // console.log(message.childNodes[compact].textContent)
+    if (message.childNodes.length > compact) {
+        // console.log(_base64ToArrayBuffer(message.childNodes[1].textContent))
+        var data = _base64ToArrayBuffer(message.childNodes[compact].textContent)
         decrypt(data, key, iv).then(function(result) {
-            message.childNodes[1].textContent = enc.decode(result)
+            message.childNodes[compact].textContent = enc.decode(result)
             // console.log("decrypt" + enc.decode(result))
         })
     }
@@ -262,3 +270,6 @@ function checkUserScroll(changes, observer) {
         decryptLastMessages(document.getElementsByClassName("markup-2BOw-j").length)
     }
 }
+
+function noenter() {
+  return !(window.event && window.event.keyCode == 13); }
