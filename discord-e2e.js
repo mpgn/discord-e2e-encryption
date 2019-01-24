@@ -100,13 +100,14 @@ function b64DecodeUnicode(str) {
 }
 
 function userSend(e){
-    e = e || event;
-    var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+    console.log("ete")
+    e = e || window.event;
+    var keyCode = e.which || e.keyCode;
     var charStr = String.fromCharCode(keyCode);
     // getting the text of the textarea
     text += charStr
     // user ENTER to send the message
-    if (e.keyCode === 13) {
+    if (keyCode === 13) {
         if (!encrypted && !spaced) {
             console.log("[+] Enter pressed ")
             console.log("[+] Cleartext: " + document.querySelector('textarea').value)
@@ -134,7 +135,7 @@ function userSend(e){
         e.preventDefault();
     }
     // check if after encrypt the message, user submit SPACE to save the new message into Discord client message variable
-    if (encrypted && e.keyCode === 32) {
+    if (encrypted && keyCode === 32) {
         spaced = 1
     }
 }
