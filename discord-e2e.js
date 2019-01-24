@@ -264,9 +264,10 @@ function checkMessagesLoaded(changes, observer) {
 
 function checkUserScroll(changes, observer) {
     console.log(event, observer)
-    if (typeof event == "undefined") {
-        // console.log("scroll")
-        decryptMessages()
+    if (typeof event == "undefined" || event.type == "scroll") {
+        console.log("scroll")
+        // dirty but working
+        setTimeout(function() { decryptMessages(); }, 2000);
     } else if(event.type === "message" || event.type === "readystatechange") {
         decryptLastMessages(document.getElementsByClassName("markup-2BOw-j").length)
     }
