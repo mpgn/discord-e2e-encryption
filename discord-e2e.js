@@ -275,3 +275,16 @@ function checkUserScroll(changes, observer) {
         decryptLastMessages(document.getElementsByClassName("markup-2BOw-j").length)
     }
 }
+
+// Check location.href each 50ms interval to load new keys if needed
+var oldUrl = location.href
+setInterval(() => {
+		var newUrl = location.href
+    if( oldUrl != newUrl){
+    		console.log("[+] URL changing ...")
+      	loadKeys()
+      	oldUrl = newUrl
+    } else{
+      	console.log("[+] No URL changing ...")
+    }
+}, 50)
