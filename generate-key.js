@@ -3,11 +3,12 @@
     More information: https://github.com/mpgn/discord-e2e-encryption
 */
 
-async function generateKey(password, iterations) {
+async function generateKey(password, salt, iterations) {
     // Based on https://8gwifi.org/docs/window-crypto-pbkdf.jsp
 
     // Define the different part for the key
-    let saltBuffer = crypto.getRandomValues(new Uint8Array(8))
+    let saltEncoder = new TextEncoder('utf-8')
+    let saltBuffer = saltEncoder.encode(salt)
     let encoder = new TextEncoder('utf-8')
     let passphraseKey = encoder.encode(password)
 
@@ -39,7 +40,7 @@ async function exportKey(key) {
     )
 }
 
-var key = await generateKey("your password", 10000)
+var key = await generateKey("your password", "your salt", 10000)
 exportKey(key).then(function (result) {
     console.log(result)
 })
