@@ -11,13 +11,11 @@
 var keyStorage = [
     {
         'channel':'/channels/495699373863338003/533030226402476032',
-        'key': 'Y0zt37HgOx-BY7SQjYVmrqhPkO44Ii2Jcb9yydUDPfE',
-        'iv': new Uint8Array([188, 185, 57, 146, 246, 194, 114, 34, 12, 80, 198, 77])
+        'key': 'Y0zt37HgOx-BY7SQjYVmrqhPkO44Ii2Jcb9yydUDPfE'
     },
     {
         'channel':'/channels/495699373863338003/533248362879778818',
-        'key': 'Ql_hbv0KXrp3QbvPpDoXj9m1E6zCa_nWYd841g9unZc',
-        'iv': new Uint8Array([188, 185, 57, 146, 246, 194, 114, 34, 12, 80, 198, 77])
+        'key': 'Ql_hbv0KXrp3QbvPpDoXj9m1E6zCa_nWYd841g9unZc'
     }
 ]
 
@@ -113,10 +111,11 @@ function userSend(e){
             // ciphertext = b64(enc(plaintext))
             var enc = new TextEncoder();
             var data = enc.encode(document.querySelector('textarea').value)
+            var iv = window.crypto.getRandomValues(new Uint8Array(12))
             encrypt(data, key, iv).then(function(result) {
                 console.log("[+] Encrypted: " + result)
                 console.log("[+] Press SPACE and ENTER on the keyboard")
-                document.querySelector('textarea').value = _arrayBufferToBase64(result)
+                document.querySelector('textarea').value = _arrayBufferToBase64(iv) + '|' + _arrayBufferToBase64(result)
                 encrypted = 1
             })
         } else if (encrypted && spaced) {
@@ -152,7 +151,8 @@ function decryptMessages() {
         if (messages[i].childNodes.length > compact) {
             //console.log(b64DecodeUnicode(messages[i].childNodes[1].textContent))
             try {
-                var data = _base64ToArrayBuffer(messages[i].childNodes[compact].textContent)
+                var iv = _base64ToArrayBuffer(messages[i].childNodes[compact].textContent.split('|')[0])
+                var data = _base64ToArrayBuffer(messages[i].childNodes[compact].textContent.split('|')[1])
                 // console.log(data)
                 decrypt(data, key, iv).then(function(result) {
                     var enc = new TextDecoder("utf-8");
