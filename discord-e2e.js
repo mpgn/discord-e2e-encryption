@@ -228,7 +228,7 @@ function addObserverIfDesiredNodeAvailable() {
 // check if user switch channel
 var observerChannel = new MutationObserver(reloadKey);
 function addObserverIfDesiredNodeAvailable2() {
-    var composeBox = document.getElementsByClassName("title-1aVOXw")[0];
+    var composeBox = document.getElementsByClassName("channels-Ie2l6A")[0];
     var config = {childList: true, subtree: true, characterData: true};
     observerChannel.observe(composeBox,config);
 }
