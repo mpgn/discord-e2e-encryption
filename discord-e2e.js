@@ -10,6 +10,11 @@
 
 var keyStorage = [
     {
+        'channel':'/channels/606416659955187712/606416659955187714',
+        'passphrase': 'this is my passphrase',
+        'salt': 'this is my long salt'
+    },
+    {
         'channel':'/channels/495699373863338003/533030226402476032',
         'key': 'Y0zt37HgOx-BY7SQjYVmrqhPkO44Ii2Jcb9yydUDPfE'
     },
@@ -18,6 +23,31 @@ var keyStorage = [
         'key': 'Ql_hbv0KXrp3QbvPpDoXj9m1E6zCa_nWYd841g9unZc'
     }
 ]
+
+async function generateKey(passphrase, salt){
+    // Import password as CryptoKey object
+    let enc = new TextEncoder()
+    let masterkey = await window.crypto.subtle.importKey(
+        "raw",
+        enc.encode(passphrase),
+        {name: "PBKDF2"},
+        false,
+        ["deriveBits", "deriveKey"]
+    )
+
+    return window.crypto.subtle.deriveKey(
+      {
+        "name": "PBKDF2",
+        salt: enc.encode(salt),
+        "iterations": 100000,
+        "hash": "SHA-256"
+      },
+      masterkey,
+      { "name": "AES-GCM", "length": 256},
+      false,
+      [ "encrypt", "decrypt" ]
+    );
+}
 
 async function importKey(key) {
     return window.crypto.subtle.importKey(
@@ -193,14 +223,19 @@ async function loadKeys() {
         return element.channel === window.location.pathname;
     });
     if (data) {
-        console.log("[+] Key and IV found for this channel")
-        key = await importKey(data.key);
-        iv = data.iv;
+        console.log("[+] Encryption activate for this channel")
+        if (data.passphrase && data.salt) {
+            key = await generateKey(data.passphrase, data.salt);
+            iv = data.iv;
+        } else {
+            key = await importKey(data.key);
+            iv = data.iv;
+        }
         watched = true;
         (new MutationObserver(checkTextareaLoaded)).observe(document, {childList: true, subtree: true});
         (new MutationObserver(checkMessagesLoaded)).observe(document, {childList: true, subtree: true});
     } else {
-        console.log("[-] No Key and IV found for this channel")
+        console.log("[-] Encryption disable for this this channel")
         watched = false;
         (new MutationObserver(checkTextareaLoaded)).observe(document, {childList: true, subtree: true});
     }
